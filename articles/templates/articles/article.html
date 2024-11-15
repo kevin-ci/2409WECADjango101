@@ -1,14 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+
     <h1> {{ article.headline }} </h1>
     <p>By: {{ article.author }}</p>
     <img src="{{ article.image }}" alt="">
     <p>{{ article.copy }}</p>
-</body>
-</html>
+
+<div class="row">
+    <div class="col-6">
+        <h2>Comments</h2>
+        {% for comment in article.comments.all %}
+            <h4>{{ comment.author }} said:</h4>
+            <p>{{ comment.text }}</p>
+            {% if comment.author == request.user %}
+                <a href="{% url 'edit_comment' comment.id %}" class="btn btn-secondary">Edit</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="col-6">
+        <h2>Add a comment:</h2>
+        <form method="POST" action="{% url 'create_comment' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Comment</button>
+        </form>
+    </div>
+</div>
+    
+{% endblock content %}

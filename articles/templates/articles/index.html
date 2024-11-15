@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
     {% for article in articles %}
-        <h2>{{ article.headline }}</h2>
-        <p>{{ article.copy|truncatechars:100 }}</p>
-        <a href="{% url 'view_article' article.id %}">Read more</a>
+    <div class="col-3">
+    <div class="card">
+        <img src="{{article.image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{article.headline}}</h5>
+          <p class="card-text">{{ article.copy|truncatechars:100 }}</p>
+          <a href="{% url 'view_article' article.id %}" class="btn btn-primary">Read more</a>
+          {% if request.user.is_staff %}
+            <a href="{% url 'edit_article' article.id %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'delete_article' article.id %}" class="btn btn-secondary">Delete</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
     {% endfor %}
-</body>
-</html>
+</div>
+{% endblock content %}
