@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1> {{ list.name }} </h1>
+    <img src="{{ list.image.url }}" alt="">
+    
+    {% for item in list.items.all %}
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.done }}</p>
+    {% endfor %}  
+{% endblock content %}

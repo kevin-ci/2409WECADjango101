@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    {% for list in lists %}
+    <div class="col-3">
+    <div class="card">
+        <img src="{{list.image.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{list.name}}</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

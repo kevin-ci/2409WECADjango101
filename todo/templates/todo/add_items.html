@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Hide the DELETE checkbox and its label */
+    .form-row input[name$="DELETE"] {
+        display: none;
+    }
+
+    .form-row label[for*="DELETE"] {
+        display: none;
+    }
+</style>
+
+<h1>Add Tasks to {{ list_instance.name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div id="formset-container">
+        {% for form in formset %}
+        <div class="form-row">
+            {{ form.as_p }}
+            <!-- Hide the delete checkbox -->
+            {{ form.DELETE }}
+            <button type="button" class="remove-form btn btn-danger">Remove</button>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" id="add-form" class="btn btn-primary">Add another task</button>
+    <button type="submit" class="btn btn-success">Save Tasks</button>
+</form>
+
+<script>
+    const formsetContainer = document.getElementById('formset-container');
+    const addFormButton = document.getElementById('add-form');
+    let formCount = {{ formset.total_form_count }};
+
+    addFormButton.addEventListener('click', () => {
+        const newForm = formsetContainer.children[0].cloneNode(true);
+        const regex = new RegExp(`-(\\d+)-`, 'g');
+        const newIndex = formCount;
+
+        // Update all input fields in the cloned form
+        newForm.innerHTML = newForm.innerHTML.replace(regex, `-${newIndex}-`);
+        Array.from(newForm.querySelectorAll('input')).forEach(input => {
+            input.value = '';
+        });
+
+        formsetContainer.appendChild(newForm);
+        formCount++;
+
+        // Update management form
+        document.querySelector('#id_form-TOTAL_FORMS').value = formCount;
+    });
+
+    formsetContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-form')) {
+            const formRow = event.target.closest('.form-row');
+
+            // If this is an existing form (has a DELETE checkbox), mark it for deletion
+            const deleteCheckbox = formRow.querySelector('input[name$="DELETE"]');
+            if (deleteCheckbox) {
+                deleteCheckbox.checked = true;
+                formRow.style.display = 'none'; // Hide the form visually
+            } else {
+                // Otherwise, remove the form entirely for new forms
+                formRow.remove();
+                formCount--;
+                document.querySelector('#id_form-TOTAL_FORMS').value = formCount;
+            }
+        }
+    });
+</script>
+{% endblock %}
