@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'articles',
     'todo',
+    'bookings',
 ]
 
 MIDDLEWARE = [

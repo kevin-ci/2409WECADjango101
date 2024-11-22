@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    {% for booking in bookings %}
+    <div class="col-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{booking.date}}</h5>
+                <p class="card-text">{{ booking.time }}</p>
+                <a href="{% url 'create_booking' booking.id %}" class="btn btn-primary">Book this Slot</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
